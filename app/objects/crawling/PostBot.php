@@ -162,7 +162,7 @@ class PostBot extends AbstractBot {
         $postExcerptSelectors       = $this->getSetting('_post_excerpt_selectors');
         $findAndReplacesForExcerpt  = $this->prepareFindAndReplaces($this->getSetting('_post_find_replace_excerpt'));
 
-        if($excerpt = $this->extractData($this->crawler, $postExcerptSelectors, "html", "excerpt", true, true)) {
+        if($excerpt = $this->extractData($this->crawler, $postExcerptSelectors, "text", "excerpt", true, true)) {
             $excerpt["data"] = trim($this->findAndReplace($findAndReplacesForExcerpt, $excerpt["data"]));
             $this->postData->setExcerpt($excerpt);
         }
@@ -174,7 +174,7 @@ class PostBot extends AbstractBot {
     private function prepareContents() {
         $postContentSelectors = $this->getSetting('_post_content_selectors');
 
-        if($contents = $this->extractData($this->crawler, $postContentSelectors, "html", "content", false, true)) {
+        if($contents = $this->extractData($this->crawler, $postContentSelectors, "text", "content", false, true)) {
             $contents = Utils::array_msort($contents, ['start' => SORT_ASC]);
             $this->postData->setContents($contents);
         }
