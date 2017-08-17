@@ -404,6 +404,17 @@ class PostBot extends AbstractBot {
         }
     }
 
+
+		function getLastEffectiveUrl($url)
+    {
+	      $content = file_get_contents($url);
+	      $matches = array();
+	      if (preg_match('/url=([\w|\W]*?)\"/', $content, $matches)) {
+		        return $matches[1];
+	      }
+	      return $url;
+    }
+
     /**
      * Prepare custom post meta.
      */
@@ -424,7 +435,10 @@ class PostBot extends AbstractBot {
 
                 if ($results = $this->extractData($this->crawler, $selectorData["selector"], $attr, false, !$isMultiple, true)) {
                     // If the results variable is not empty, add it among the custom meta.
-                    if($results) {
+ 	                   if($results) {
+											 if ($selectorData["meta_key"] == '_product_url') {
+                            $results = $this->getLastEffectiveUrl($results);
+                       }
                         $customMeta[] = [
                             "data"      =>  $results,
                             "meta_key"  =>  $selectorData["meta_key"],
