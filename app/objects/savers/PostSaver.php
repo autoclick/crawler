@@ -760,6 +760,7 @@ class PostSaver extends AbstractSaver {
                 if($term && isset($term->term_id)) {
                     wp_set_object_terms($postId, $term->term_id, 'product_cat');
                 }
+	        			wp_set_object_terms( $postId, 'external', 'product_type' );
             }
         }
 
