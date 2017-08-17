@@ -343,7 +343,7 @@ class Utils {
         // Get WooCommerce categories
         $wooCommerceCategories = get_categories([
             'taxonomy'      => 'product_cat',
-            'orderby'       => 'name',
+            'orderby'       => 'id',
             'hierarchical'  => 0,
             'hide_empty'    =>  false,
         ]);
