@@ -1,4 +1,4 @@
-<div class="input-group text
+<div class="input-group text 
     {{ isset($addon) ? ' addon ' : '' }}
     {{ isset($remove) ? ' remove ' : '' }}
     {{ isset($showDevTools) && $showDevTools ? ' dev-tools ' : '' }}
@@ -13,7 +13,8 @@
         @include('form-items.dev-tools.button-dev-tools')
     @endif
     <div class="input-container">
-        <input type="{{ isset($type) ? $type : 'text' }}"
+
+       <input type="{{ isset($type) ? $type : 'text' }}"
                @if(isset($min)) min="{{ $min }}" @endif
                id="{{ isset($name) ? $name : '' }}"
                name="{{ isset($name) ? $name : '' }}"

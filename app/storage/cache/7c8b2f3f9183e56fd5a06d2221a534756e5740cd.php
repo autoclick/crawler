@@ -1,1 +1,0 @@
-<button class="button toggle-info-texts" title="<?php echo e(_wpcc('Toggle info texts')); ?>"><span class="dashicons dashicons-info"></span></button>

@@ -5,7 +5,7 @@
             'type'      =>  $_GET["success"] == 'true' ? 'success' : 'error',
             'message'   =>  $_GET["success"] == 'true' ?
                             _wpcc("Settings updated.") :
-                            (isset($_GET["message"]) && $_GET["message"] ? $_GET["message"] : _wpcc("An error occurred."))
+                            (isset($_GET["message"]) && $_GET["message"] ? $_GET["message"] : _wpcc("An error occurred. jschen"))
         ])
     @endif
 

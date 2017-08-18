@@ -29,17 +29,18 @@
         </td>
         <td>
             @include('form-items/multiple', [
-                'include'       => 'form-items/text',
-                'name'          => '_post_title_selectors',
+                'include'       => 'form-items/selector-with-attribute',
+                'name'          =>  '_post_title_selectors',
                 'addon'         =>  'dashicons dashicons-search',
                 'data'          =>  [
-                    'urlSelector'           =>  "#_test_url_post",
-                    'testType'              =>  \WPCCrawler\objects\Test::$TEST_TYPE_TEXT,
-                    'targetCssSelectors'    => ['h1']
+                    'urlSelector'   =>  "#_test_url_post",
+                    'testType'      =>  \WPCCrawler\objects\Test::$TEST_TYPE_SELECTOR_ATTRIBUTE,
+                    'attr'          =>  'text'
                 ],
                 'test'          => true,
-                'inputClass'    => 'css-selector',
-                'showDevTools'  => true,
+								'addKeys'       => true,
+                'addonClasses'  => 'wcc-test-selector-attribute',
+                'defaultAttr'   => 'text',
             ])
             @include('partials/test-result-container')
         </td>
@@ -56,22 +57,25 @@
                     be used.')
             ])
         </td>
-        <td>
+       <td>
             @include('form-items/multiple', [
-                'include'       => 'form-items/text',
-                'name'          => '_post_excerpt_selectors',
+                'include'       => 'form-items/selector-with-attribute',
+                'name'          =>  '_post_excerpt_selectors',
                 'addon'         =>  'dashicons dashicons-search',
                 'data'          =>  [
                     'urlSelector'   =>  "#_test_url_post",
-                    'testType'      =>  \WPCCrawler\objects\Test::$TEST_TYPE_HTML,
+                    'testType'      =>  \WPCCrawler\objects\Test::$TEST_TYPE_SELECTOR_ATTRIBUTE,
+                    'attr'          =>  'text'
                 ],
                 'test'          => true,
-                'inputClass'    => 'css-selector',
-                'showDevTools'  => true,
+								'addKeys'       => true,
+                'addonClasses'  => 'wcc-test-selector-attribute',
+                'defaultAttr'   => 'text',
             ])
             @include('partials/test-result-container')
         </td>
-    </tr>
+  
+		   </tr>
 
     {{-- POST CONTENT SELECTORS --}}
     <tr>
@@ -86,16 +90,18 @@
         </td>
         <td>
             @include('form-items/multiple', [
-                'include'       =>  'form-items/text',
+                'include'       => 'form-items/selector-with-attribute',
                 'name'          =>  '_post_content_selectors',
                 'addon'         =>  'dashicons dashicons-search',
                 'data'          =>  [
                     'urlSelector'   =>  "#_test_url_post",
-                    'testType'      =>  \WPCCrawler\objects\Test::$TEST_TYPE_HTML,
+                    'testType'      =>  \WPCCrawler\objects\Test::$TEST_TYPE_SELECTOR_ATTRIBUTE,
+                    'attr'          =>  'text'
                 ],
                 'test'          => true,
-                'inputClass'    => 'css-selector',
-                'showDevTools'  => true,
+								'addKeys'       => true,
+                'addonClasses'  => 'wcc-test-selector-attribute',
+                'defaultAttr'   => 'text',
             ])
             @include('partials/test-result-container')
         </td>

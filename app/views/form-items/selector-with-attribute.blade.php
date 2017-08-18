@@ -5,6 +5,9 @@
         @include('form-items.dev-tools.button-dev-tools')
     @endif
     <div class="input-container">
+        <input type="checkbox" name="{{ $name . '[multiple]' }}" id="{{ $name . '[multiple]' }}" data-toggle="tooltip" title="{{ _wpcc('Multiple?') }}"
+						               @if(isset($value['multiple'])) checked="checked" @endif>
+
         <input type="text" name="{{ $name . '[selector]' }}" id="{{ $name . '[selector]' }}" placeholder="{{ _wpcc('Selector') }}"
                value="{{ isset($value['selector']) ? $value['selector'] : '' }}"
                class="css-selector">

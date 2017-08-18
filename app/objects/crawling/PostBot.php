@@ -146,38 +146,78 @@ class PostBot extends AbstractBot {
      * Prepares the title
      */
     private function prepareTitle() {
+		/*
         $postTitleSelectors         = $this->getSetting('_post_title_selectors');
-        $findAndReplacesForTitle    = $this->prepareFindAndReplaces($this->getSetting('_post_find_replace_title'));
 
         if($title = $this->extractData($this->crawler, $postTitleSelectors, "text", false, true, true)) {
             $title = $this->findAndReplace($findAndReplacesForTitle, $title);
             $this->postData->setTitle($title);
         }
+				*/
+        $findAndReplacesForTitle    = $this->prepareFindAndReplaces($this->getSetting('_post_find_replace_title'));
+				$title = $this->extractBySelectors('_post_title_selectors', false, false);	
+        $title = $this->findAndReplace($findAndReplacesForTitle, $title);
+        $this->postData->setTitle($title);
     }
 
     /**
      * Prepares the excerpt
      */
     private function prepareExcerpt() {
-        $postExcerptSelectors       = $this->getSetting('_post_excerpt_selectors');
+				$contents = $this->extractBySelectors('_post_excerpt_selectors', 'excerpt', true);	
         $findAndReplacesForExcerpt  = $this->prepareFindAndReplaces($this->getSetting('_post_find_replace_excerpt'));
 
-        if($excerpt = $this->extractData($this->crawler, $postExcerptSelectors, "text", "excerpt", true, true)) {
-            $excerpt["data"] = trim($this->findAndReplace($findAndReplacesForExcerpt, $excerpt["data"]));
-            $this->postData->setExcerpt($excerpt);
+				if(sizeof($contents) > 0) {
+						foreach ($contents as $c) {
+            		$c["data"] = trim($this->findAndReplace($findAndReplacesForExcerpt, $c["data"]));
+						}
+            $this->postData->setExcerpt($contents);
         }
-    }
+	  }
 
     /**
      * Prepares contents using post content selectors
      */
     private function prepareContents() {
-        $postContentSelectors = $this->getSetting('_post_content_selectors');
-
-        if($contents = $this->extractData($this->crawler, $postContentSelectors, "text", "content", false, true)) {
-            $contents = Utils::array_msort($contents, ['start' => SORT_ASC]);
+				$contents = $this->extractBySelectors('_post_content_selectors', 'content', true);	
+				if(sizeof($contents) > 0) {
             $this->postData->setContents($contents);
         }
+		}
+
+		//jchen
+    private function extractBySelectors($key, $content_type, $is_array) {
+        $selectors = $this->getSetting($key);
+				$arr = [];
+				$txt = '';
+
+	      if($selectors && !empty($selectors)) {
+            foreach ($selectors as $selector) {
+                $attr = isset($selector["attr"]) && $selector["attr"] ? $selector["attr"] : "text";
+								$sel = $selector["selector"];
+                $isSingle= isset($selector["multiple"]) ? false : true;
+
+                if ($content = $this->extractData($this->crawler, $selector, $attr, $content_type, $isSingle, true)) {
+										if ($is_array) {
+            						$content = Utils::array_msort($content, ['start' => SORT_ASC]);
+												$arr = array_merge($arr, $content);
+										} else {
+												if ($isSingle) {
+														$txt .= $content;
+												}else {
+														foreach($content as $str) {
+																$txt .= $str;
+														}
+												}
+										}
+               	}
+            }
+        }
+
+				if ($is_array ) { 
+						$txt = $arr;
+				}
+				return $txt;
     }
 
     /**

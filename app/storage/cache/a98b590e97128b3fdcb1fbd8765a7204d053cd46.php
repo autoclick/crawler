@@ -1,7 +1,0 @@
-<button class="button <?php echo e(isset($buttonClass) && $buttonClass ? $buttonClass : ''); ?>"
-        type="button"
-        title="<?php echo e(isset($title) ? $title : ''); ?>"
-        <?php if(isset($data)): ?> data-wcc="<?php echo e(json_encode($data)); ?>" <?php endif; ?>
->
-    <span class="<?php echo e(isset($iconClass) && $iconClass ? $iconClass : ''); ?>"></span>
-</button>
