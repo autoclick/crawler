@@ -710,59 +710,84 @@ abstract class AbstractBot {
             if($singleResult && !empty($results)) break;
 
             $offset = 0;
-            $crawler->filter($selector)->each(function($node, $i) use ($crawler, $dataType,
-                $singleResult, $trim, $contentType, &$results, &$offset, &$crawlerHtml) {
-                /** @var Crawler $node */
+			//jchen to support
+			if ($dataType[0] == 'regex') {
+				$matches = array();
+				if (preg_match($selectors, $crawlerHtml, $matches)) {
+					for ($i= 0 ; $i < sizeof($matches) ; $i++) {
+						$val = $matches[i];
+						if($contentType) {
+							$start = mb_strpos($crawlerHtml, $val, $offset);
+							$results[] = [
+								"type"  =>  $contentType,
+								"data"  =>  $val,
+								"start" =>  $start,
+								"end"   =>  $start + mb_strlen($val)
+								];
+							$offset = $start + 1;
+						} else {
+							$results[]= $val;
+						}
+						if ($singleResult) {
+							break;
+						}
+					}
+				}
+			} else {
+				$crawler->filter($selector)->each(function($node, $i) use ($crawler, $dataType,
+						$singleResult, $trim, $contentType, &$results, &$offset, &$crawlerHtml) {
+					/** @var Crawler $node */
 
-                // If single result is needed and we have found one, then do not continue.
-                if($singleResult && !empty($results)) return;
+					// If single result is needed and we have found one, then do not continue.
+					if($singleResult && !empty($results)) return;
 
-                $value = null;
-                foreach ($dataType as $dt) {
-                    try {
-                        $val = null;
-                        switch ($dt) {
-                            case "text":
-                                $val = $node->text();
-                                break;
-                            case "html":
-                                $val = Utils::getNodeHTML($node);
-                                break;
-                            default:
-                                $val = $node->attr($dt);
-                                break;
-                        }
+					$value = null;
+					foreach ($dataType as $dt) {
+							try {
+									$val = null;
+									switch ($dt) {
+											case "text":
+													$val = $node->text();
+													break;
+											case "html":
+													$val = Utils::getNodeHTML($node);
+													break;
+											default:
+													$val = $node->attr($dt);
+													break;
+									}
 
-                        if($val) {
-                            if($trim) $val = trim($val);
-                            if($val) {
-                                if(!$value) $value = [];
-                                $value[$dt] = $val;
-                            }
-                        }
+									if($val) {
+											if($trim) $val = trim($val);
+											if($val) {
+													if(!$value) $value = [];
+													$value[$dt] = $val;
+											}
+									}
 
-                    } catch (\InvalidArgumentException $e) { }
-                }
+							} catch (\InvalidArgumentException $e) { }
+					}
 
-                try {
-                    if($value && !empty($value)) {
-                        if ($contentType) {
-                            $html = Utils::getNodeHTML($node);
-                            $start = mb_strpos($crawlerHtml, $html, $offset);
-                            $results[] = [
-                                "type"  =>  $contentType,
-                                "data"  =>  sizeof($value) == 1 ? array_values($value)[0] : $value,
-                                "start" =>  $start,
-                                "end"   =>  $start + mb_strlen($html)
-                            ];
-                            $offset = $start + 1;
-                        } else {
-                            $results[] = sizeof($value) == 1 ? array_values($value)[0] : $value;
-                        }
-                    }
+					try {
+							if($value && !empty($value)) {
+									if ($contentType) {
+											$html = Utils::getNodeHTML($node);
+											$start = mb_strpos($crawlerHtml, $html, $offset);
+											$results[] = [
+													"type"  =>  $contentType,
+													"data"  =>  sizeof($value) == 1 ? array_values($value)[0] : $value,
+													"start" =>  $start,
+													"end"   =>  $start + mb_strlen($html)
+											];
+											$offset = $start + 1;
+									} else {
+											$results[] = sizeof($value) == 1 ? array_values($value)[0] : $value;
+									}
+							}
 
-                } catch(\InvalidArgumentException $e) { }
-            });
+					} catch(\InvalidArgumentException $e) { }
+				});
+			}
         }
 
         // Return the results

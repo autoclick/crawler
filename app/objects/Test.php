@@ -296,64 +296,79 @@ class Test {
         $results = [];
 
         $abort = false;
-        $crawler->filter($selector)->each(function($node, $i) use ($testType, $attr, &$results, $crawler, &$abort) {
-            if($abort) return;
+		if ($attr == 'regex') {
+        	$content = $crawler->html();
+			$matches = array();
+			$selector = '/' . $selector . '/' ;
+			try {
+				if (preg_match($selector, $content, $matches)) {
+					$results[] = $matches[1];
+				} else {
+					$results []= 'not find';
+				}
+			} catch(Exception $e) {
+				$results []= $e->getMessage();
+			}
+		} else {
+			$crawler->filter($selector)->each(function($node, $i) use ($testType, $attr, &$results, $crawler, &$abort) {
+				if($abort) return;
 
-            /** @var Crawler $node */
-            if($i >= static::$MAX_TEST_ITEM) return;
+				/** @var Crawler $node */
+				if($i >= static::$MAX_TEST_ITEM) return;
 
-            $result = false;
-            try {
-                switch ($testType) {
-                    case static::$TEST_TYPE_HREF:
-                        $result = $node->attr("href");
-                        break;
-                    case static::$TEST_TYPE_HTML:
-                        $result = Utils::getNodeHTML($node);
-                        break;
-                    case static::$TEST_TYPE_TEXT:
-                        $result = $node->text();
-                        break;
-                    case static::$TEST_TYPE_SRC:
-                        $result = $node->attr("src");
-                        break;
-                    case static::$TEST_TYPE_FIRST_POSITION:
-                        $nodeHtml = Utils::getNodeHTML($node);
-                        $result = $nodeHtml ? mb_strpos($crawler->html(), $nodeHtml) : false;
-                        break;
-                    case static::$TEST_TYPE_SELECTOR_ATTRIBUTE:
-                        if($attr) {
-                            switch($attr) {
-                                case "text":
-                                    $result = $node->text();
-                                    break;
-                                case "html":
-                                    $result = Utils::getNodeHTML($node);
-                                    break;
-                                default:
-                                    $result = $node->attr($attr);
-                                    break;
-                            }
-                        }
-                        break;
-                }
-            } catch(\InvalidArgumentException $e) { }
+				$result = false;
+				try {
+					switch ($testType) {
+						case static::$TEST_TYPE_HREF:
+							$result = $node->attr("href");
+							break;
+						case static::$TEST_TYPE_HTML:
+							$result = Utils::getNodeHTML($node);
+							break;
+						case static::$TEST_TYPE_TEXT:
+							$result = $node->text();
+							break;
+						case static::$TEST_TYPE_SRC:
+							$result = $node->attr("src");
+							break;
+						case static::$TEST_TYPE_FIRST_POSITION:
+							$nodeHtml = Utils::getNodeHTML($node);
+							$result = $nodeHtml ? mb_strpos($crawler->html(), $nodeHtml) : false;
+							break;
+						case static::$TEST_TYPE_SELECTOR_ATTRIBUTE:
+							if($attr) {
+								switch($attr) {
+									case "text":
+										$result = $node->text();
+										break;
+									case "html":
+										$result = Utils::getNodeHTML($node);
+										break;
+									default:
+										$result = $node->attr($attr);
+										break;
+								}
+							}
+							break;
+					}
+				} catch(\InvalidArgumentException $e) { }
 
-            if($result) {
-                if($testType == static::$TEST_TYPE_FIRST_POSITION) {
-                    $results[] = Utils::getNodeHTML($node); // Add html of the node for a meaningful result
-                    $results[] = $result;
-                    $abort = true;
-                } else if($result = trim($result)) {
-                    $results[] = $result;
-                }
-            }
+				if($result) {
+					if($testType == static::$TEST_TYPE_FIRST_POSITION) {
+						$results[] = Utils::getNodeHTML($node); // Add html of the node for a meaningful result
+						$results[] = $result;
+						$abort = true;
+					} else if($result = trim($result)) {
+						$results[] = $result;
+					}
+				}
 
-        });
+			});
+		}
 
         $message = sprintf(
-            _wpcc('Test results for %1$s%2$s on %3$s:'),
-            "<span class='highlight selector'>" . $selector . "</span>",
+            _wpcc('jschen Test results for %1$s%2$s on %3$s:'),
+            "<span class='highlight selector'>" . htmlentities($selector) . "</span>",
             $attr   ? " <span class='highlight attribute'>" . $attr . "</span> "    : '',
             $url    ? "<span class='highlight url'>" . $url . "</span>"             : ''
         );
@@ -795,6 +810,7 @@ class Test {
     public static function respondToTestRequest($data) {
         $testType = Utils::array_get($data, "testType");
         $serializedValues = Utils::array_get($data, "serializedValues");
+		$serializedValues = urldecode($serializedValues);
 
         if(!$testType) return null;
 
@@ -931,9 +947,12 @@ class Test {
                 $attr = Utils::array_get($formItemValues, "attr");
                 if(!$attr) $attr = Utils::array_get($data, "attr");
 
+				$sel = Utils::array_get($formItemValues, "selector");
+//                if(!$sel) $sel = Utils::array_get($data, "selector");
+				
                 return Factory::test()->conductSelectorTest(
                     Utils::array_get($data, "url"),
-                    Utils::array_get($formItemValues, "selector"),
+					$sel,
                     $testType,
                     $attr,
                     Utils::array_get($data, "content"),
