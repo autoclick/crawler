@@ -487,9 +487,14 @@ class PostBot extends AbstractBot {
             foreach($customPostMetaData as $metaData) {
                 if(!isset($metaData["key"]) || !$metaData["key"] || !isset($metaData["value"])) continue;
                 $isMultiple = isset($metaData["multiple"]);
+				//jchen, add micro @url
+				$val = $metaData["value"];
+				if ($val == '@url') {
+					$val =  $this->postUrl;
+				}
 
                 $customMeta[] = [
-                    "data"      =>  $metaData["value"],
+                    "data"      =>  $val,
                     "meta_key"  =>  $metaData["key"],
                     "multiple"  =>  $isMultiple ? 1 : 0,
                 ];

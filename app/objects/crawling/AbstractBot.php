@@ -711,28 +711,11 @@ abstract class AbstractBot {
 
             $offset = 0;
 			//jchen to support
-			if ($dataType[0] == 'regex') {
+			if ($dataType[0] == 'regex' ) {
 				$matches = array();
-				if (preg_match($selectors, $crawlerHtml, $matches)) {
-					for ($i= 0 ; $i < sizeof($matches) ; $i++) {
-						$val = $matches[i];
-						if($contentType) {
-							$start = mb_strpos($crawlerHtml, $val, $offset);
-							$results[] = [
-								"type"  =>  $contentType,
-								"data"  =>  $val,
-								"start" =>  $start,
-								"end"   =>  $start + mb_strlen($val)
-								];
-							$offset = $start + 1;
-						} else {
-							$results[]= $val;
-						}
-						if ($singleResult) {
-							break;
-						}
-					}
-				}
+				if (preg_match('/' . $selector . '/', $crawlerHtml, $matches)) {
+					$results [] = $matches[1];
+				} 
 			} else {
 				$crawler->filter($selector)->each(function($node, $i) use ($crawler, $dataType,
 						$singleResult, $trim, $contentType, &$results, &$offset, &$crawlerHtml) {
