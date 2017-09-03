@@ -616,7 +616,10 @@ class PostSaver extends AbstractSaver {
         if(static::$DEBUG) var_dump("Inserted Post ID: " . $postId);
 
         // Save post thumbnail, meta keywords and description
-        if($isFirstPage && $postId) {
+		// jchen, need to get image from next pages
+        //if($isFirstPage && $postId) {
+        if($postId) {
+            if(static::$DEBUG) var_dump('Save meta and thumbnail');
             if(static::$DEBUG) var_dump('Save meta and thumbnail');
 
             $thumbnailUrl = null;
