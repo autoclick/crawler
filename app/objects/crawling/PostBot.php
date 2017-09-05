@@ -72,14 +72,13 @@ class PostBot extends AbstractBot {
         $this->removeLinksFromShortCodes    = $this->getSetting('_post_remove_links_from_short_codes');
         $notifyWhenEmptySelectors           = $this->getSetting('_post_notify_empty_value_selectors');
 
-		error_log('---postbot.php begin:  crawlpost           ');
         $this->crawler = $this->request($postUrl, "GET");
         if(!$this->crawler) return null;
 
         // Make initial replacements.
+		// jchen might cause charset issue
 //        $this->crawler = $this->makeInitialReplacements($this->crawler, $findAndReplacesForFirstLoad, true);
 
-		error_log('postbot.php end: crawlPost                                            ');
         // Apply HTML manipulations
         $this->applyFindAndReplaceInElementAttributes($this->crawler, '_post_find_replace_element_attributes');
         $this->applyExchangeElementAttributeValues($this->crawler, '_post_exchange_element_attributes');
