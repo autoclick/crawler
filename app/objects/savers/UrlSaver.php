@@ -55,7 +55,7 @@ class UrlSaver extends AbstractSaver {
         // So, make sure the array keys start from 0 and increase one by one.
         $categories = array_values($categories);
 
-//        if(static::$DEBUG) var_dump("categories");
+ //       if(static::$DEBUG) var_dump("categories");
 //        if(static::$DEBUG) var_dump($categories);
 
         /**
@@ -111,6 +111,7 @@ class UrlSaver extends AbstractSaver {
             // Get next page of the last-checked category. If there is none, set the next category as category-to-check.
             $categoryUrlToCheck     = $lastCheckedCategoryUrl;
             $categoryCurrentPageUrl = $this->getSetting('_cron_last_checked_category_next_page_url');
+		
             $crawledPageCount       = $this->getSetting('_cron_crawled_page_count');
             if(!$crawledPageCount) $crawledPageCount = 0;
 
@@ -195,11 +196,17 @@ class UrlSaver extends AbstractSaver {
             }
         }
 
+		//jchen put all cat url to array 
+        Factory::databaseService()->addUrl($siteIdToCheck, $categoryCurrentPageUrl, null , -1, true); 
+
         // If the next page URL is the same as the current page, then set next page url to false. By this way, the next
         // request will be for another category.
         $nextPageUrl = $data->getNextPageUrl() ? $data->getNextPageUrl() : false;
 
         if($nextPageUrl && $nextPageUrl == $categoryCurrentPageUrl) $nextPageUrl = false;
+
+		// jchen if next page url has been handled
+		if($nextPageUrl && (Factory::databaseService()->getUrlBySiteIdAndUrl($siteIdToCheck, $nextPageUrl) != null)) $nextPageUrl = false;
 
         // If there is a next page and no new URLs inserted in this page, act how the user wants, stop or continue looking
         if(!$this->handleNoNewUrlInsertedCount($siteIdToCheck, $settings, $nextPageUrl, $insertCount)) {
