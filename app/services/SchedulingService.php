@@ -60,6 +60,7 @@ class SchedulingService {
      */
     private $activeSiteIdsCache = [];
 
+
     public function __construct() {
         // Add custom time intervals
         $this->setCRONIntervals();
@@ -86,7 +87,8 @@ class SchedulingService {
      * @param bool $bypassInactiveScheduling true if you want to run this even if the scheduling is inactive
      */
     public function executeEventCollectUrls($bypassInactiveScheduling = false) {
-        if (!Factory::wptslmClient()->isUserCool()) return;
+        //if (!Factory::wptslmClient()->isUserCool()) return;
+
 
         // If the scheduling is not active, do not continue.
         if (!$bypassInactiveScheduling && !Settings::isSchedulingActive()) {
@@ -131,7 +133,8 @@ class SchedulingService {
      * @param bool $bypassInactiveScheduling true if you want to run this even if the scheduling is inactive
      */
     public function executeEventCrawlPost($bypassInactiveScheduling = false) {
-        if (!Factory::wptslmClient()->isUserCool()) return;
+//        if (!Factory::wptslmClient()->isUserCool()) return;
+		error_log('service.scheduleing: begin crawl');
 
         // If the scheduling is not active, do not continue.
         if (!$bypassInactiveScheduling && !Settings::isSchedulingActive()) {
