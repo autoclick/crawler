@@ -13,11 +13,19 @@ use WPCCrawler\objects\crawling\CategoryBot;
 use WPCCrawler\objects\traits\SettingsTrait;
 use WPCCrawler\Utils;
 
+function my_var_dump( $object=null ){
+    ob_start();                    // start buffer capture
+    var_dump( $object );           // dump the values
+    $contents = ob_get_contents(); // put the buffer into a variable
+    ob_end_clean();                // end capture
+    error_log( $contents );        // log contents of the result of var_dump( $object )
+}
+
 class UrlSaver extends AbstractSaver {
 
     use SettingsTrait;
 
-    private static $DEBUG = false;
+    private static $DEBUG = true;
 
     /** @var string Stores ID of the site which is checked for URL collection (category crawling) the last */
     public $optionLastCheckedSiteId    = '_wpcc_last_checked_site_id';
@@ -55,8 +63,8 @@ class UrlSaver extends AbstractSaver {
         // So, make sure the array keys start from 0 and increase one by one.
         $categories = array_values($categories);
 
- //       if(static::$DEBUG) var_dump("categories");
-//        if(static::$DEBUG) var_dump($categories);
+        //if(static::$DEBUG) my_var_dump("categories");
+        //if(static::$DEBUG) my_var_dump($categories);
 
         /**
          * Holds the category URL to be checked. This URL is the same as the URL in category map that the user prepared.
@@ -171,7 +179,9 @@ class UrlSaver extends AbstractSaver {
         $bot = new CategoryBot($settings, $siteIdToCheck);
         $data = $bot->collectUrls($categoryCurrentPageUrl);
         $this->setRequestMade(true);
-//        if(static::$DEBUG) var_dump($data);
+
+//        if(static::$DEBUG) my_var_dump($categoryCurrentPageUrl);
+ //       if(static::$DEBUG) my_var_dump($data);
 
         // If the data is null, update last checked and write an error message.
         if($data === null) {

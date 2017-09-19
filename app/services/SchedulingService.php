@@ -134,7 +134,6 @@ class SchedulingService {
      */
     public function executeEventCrawlPost($bypassInactiveScheduling = false) {
 //        if (!Factory::wptslmClient()->isUserCool()) return;
-		error_log('service.scheduleing: begin crawl');
 
         // If the scheduling is not active, do not continue.
         if (!$bypassInactiveScheduling && !Settings::isSchedulingActive()) {

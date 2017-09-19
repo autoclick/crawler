@@ -717,12 +717,17 @@ class PostBot extends AbstractBot {
 
                             // Make the replacements for the image URL
                             if($src) $src = $this->findAndReplace($findAndReplacesForImageUrls, $src);
+							
+							if ($src == $thumbnailUrl) {
+								continue;
+							}
 
                             $nImageData = [];
                             $nImageData["src"] = $src;
                             $nImageData["original"] = $original;
                             $nImageData["do_not_replace"] = true;
                             $nImageData["gallery_image"] = true;
+
                         }
 
                         $sourceData = array_merge($sourceData, $imageData);
