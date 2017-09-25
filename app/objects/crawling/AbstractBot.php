@@ -713,8 +713,13 @@ abstract class AbstractBot {
 			//jchen to support
 			if ($dataType[0] == 'regex' ) {
 				$matches = array();
-				if (preg_match('/' . $selector . '/', $crawlerHtml, $matches)) {
-					$results [] = $matches[1];
+				if (preg_match_all('/' . $selector . '/', $crawlerHtml, $matches)) {
+//					error_log('-------------------matches is:' . Utils::my_var_dump($matches));
+					foreach ($matches[1] as $val) {
+						if (strlen(trim($val)) > 0){
+							$results [] = trim($val);
+						}
+					}
 				} 
 			} else {
 				$crawler->filter($selector)->each(function($node, $i) use ($crawler, $dataType,
