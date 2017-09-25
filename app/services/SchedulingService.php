@@ -89,7 +89,6 @@ class SchedulingService {
     public function executeEventCollectUrls($bypassInactiveScheduling = false) {
         //if (!Factory::wptslmClient()->isUserCool()) return;
 
-
         // If the scheduling is not active, do not continue.
         if (!$bypassInactiveScheduling && !Settings::isSchedulingActive()) {
             // Sometimes, when general settings are saved, the events cannot be unscheduled for some reason :) Here,
@@ -171,7 +170,9 @@ class SchedulingService {
      * @param bool $bypassInactiveScheduling true if you want to run this even if the scheduling is inactive
      */
     public function executeEventRecrawlPost($bypassInactiveScheduling = false) {
-        if (!Factory::wptslmClient()->isUserCool()) return;
+//        if (!Factory::wptslmClient()->isUserCool()) return;
+		//
+		error_log('recraw post');
 
         // If the scheduling is not active, do not continue.
         if (!$bypassInactiveScheduling && !Settings::isRecrawlingActive()) {
