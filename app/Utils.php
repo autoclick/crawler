@@ -40,6 +40,13 @@ class Utils {
             return add_post_meta($postId, $metaKey, $metaValue, false);
         }
     }
+	public static function my_var_dump( $object=null ){
+		ob_start();                    // start buffer capture
+		var_dump( $object );           // dump the values
+		$contents = ob_get_contents(); // put the buffer into a variable
+		ob_end_clean();                // end capture
+		error_log( $contents );        // log contents of the result of var_dump( $object )
+	}		
 
     /**
      * Extracts the value of a meta key from meta array. If the value for the specified key is serialized, it will be
