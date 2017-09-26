@@ -280,11 +280,21 @@ class UrlSaver extends AbstractSaver {
 		   	for ($i = $begin; $i <= $end; $i++) {
 		   		$tmp = $base . $i;
 		       	if ($tmp == $categoryCurrentPageUrl) {
-		       		return $base . ($i+1);
+					if(($i+1) <= $end) {
+		       			return $base . ($i+1);
+					}else {
+						//reach the end of micro
+						return false;
+					}
 		        }
 		    }
+			// current page is not generated from micro, something is wrong
+			error_log('categoryCurrentPageUrl is not genrated from micro');
+			return false;
+		}else {
+			//no micro, return original
+			return $categoryUrlToCheck;
 		}
-		return $categoryUrlToCheck;
 	}
 
     /**
