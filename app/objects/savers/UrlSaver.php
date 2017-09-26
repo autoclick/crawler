@@ -110,7 +110,8 @@ class UrlSaver extends AbstractSaver {
             }
 
             $categoryUrlToCheck     = $categories[0]["url"];
-            $categoryCurrentPageUrl = $categoryUrlToCheck;
+            $categoryCurrentPageUrl = $this->extractMicroUrl($categoryUrlToCheck);
+			error_log('first time category current page url=' . $categoryCurrentPageUrl);
             $targetCategoryId       = $categories[0]["cat_id"];
 
             // Otherwise, get the next page URL of the last-checked category
@@ -214,7 +215,8 @@ class UrlSaver extends AbstractSaver {
         $nextPageUrl = $data->getNextPageUrl() ? $data->getNextPageUrl() : false;
 
         if($nextPageUrl && $nextPageUrl == $categoryCurrentPageUrl) $nextPageUrl = false;
-
+		$nextPageUrl = $this->extractMicroUrl($categoryUrlToCheck, $categoryCurrentPageUrl);
+		error_log('first time category next page url=' . $nextPageUrl);
 		// jchen if next page url has been handled
 		if($nextPageUrl && (Factory::databaseService()->getUrlBySiteIdAndUrl($siteIdToCheck, $nextPageUrl) != null)) $nextPageUrl = false;
 
@@ -259,6 +261,31 @@ class UrlSaver extends AbstractSaver {
         if(static::$DEBUG) var_dump("Crawled page count is "       . $crawledPageCount);
 
     }
+
+	// jchen if the category url to check contain ';1,100', then  calculate next page url
+	private function extractMicroUrl($categoryUrlToCheck, $categoryCurrentPageUrl = false){
+		error_log('source =' .$categoryUrlToCheck);
+
+		$arr = explode (';' , $categoryUrlToCheck);
+		if(sizeof($arr) > 1) {
+			$base = $arr[0];
+			$micro = $arr[1];
+
+		   	$marr = explode (',', $micro);
+		   	$begin = $marr[0];
+			if(!$categoryCurrentPageUrl) {
+				return $base . $begin;	
+			}
+		   	$end = $marr[1];
+		   	for ($i = $begin; $i <= $end; $i++) {
+		   		$tmp = $base . $i;
+		       	if ($tmp == $categoryCurrentPageUrl) {
+		       		return $base . ($i+1);
+		        }
+		    }
+		}
+		return $categoryUrlToCheck;
+	}
 
     /**
      * Handle the number of pages crawled with no new URL insertion. Here is the scenario. By the time the
