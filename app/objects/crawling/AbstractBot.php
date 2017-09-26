@@ -712,6 +712,7 @@ abstract class AbstractBot {
             $offset = 0;
 			//jchen to support
 			if ($dataType[0] == 'regex' ) {
+				error_log('------------ to support regex' . Utils::my_var_dump($selector));
 				$matches = array();
 				if (preg_match_all('/' . $selector . '/', $crawlerHtml, $matches)) {
 //					error_log('-------------------matches is:' . Utils::my_var_dump($matches));

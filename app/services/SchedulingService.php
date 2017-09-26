@@ -89,6 +89,7 @@ class SchedulingService {
     public function executeEventCollectUrls($bypassInactiveScheduling = false) {
         //if (!Factory::wptslmClient()->isUserCool()) return;
 
+		error_log('jchen: collecting urls in scheduler');
         // If the scheduling is not active, do not continue.
         if (!$bypassInactiveScheduling && !Settings::isSchedulingActive()) {
             // Sometimes, when general settings are saved, the events cannot be unscheduled for some reason :) Here,
@@ -172,7 +173,6 @@ class SchedulingService {
     public function executeEventRecrawlPost($bypassInactiveScheduling = false) {
 //        if (!Factory::wptslmClient()->isUserCool()) return;
 		//
-		error_log('recraw post');
 
         // If the scheduling is not active, do not continue.
         if (!$bypassInactiveScheduling && !Settings::isRecrawlingActive()) {
