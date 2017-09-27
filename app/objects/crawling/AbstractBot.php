@@ -705,6 +705,7 @@ abstract class AbstractBot {
 
         $crawlerHtml = $crawler->html();
         $results = [];
+//		error_log('------------ to support regex' . Utils::my_var_dump($selectors));
         foreach($selectors as $selector) {
             if(!$selector) continue;
             if($singleResult && !empty($results)) break;
@@ -712,13 +713,23 @@ abstract class AbstractBot {
             $offset = 0;
 			//jchen to support
 			if ($dataType[0] == 'regex' ) {
-				error_log('------------ to support regex' . Utils::my_var_dump($selector));
+				//error_log('------------ to support regex' . Utils::my_var_dump($selector));
 				$matches = array();
 				if (preg_match_all('/' . $selector . '/', $crawlerHtml, $matches)) {
-//					error_log('-------------------matches is:' . Utils::my_var_dump($matches));
-					foreach ($matches[1] as $val) {
+				//	error_log('-------------------matches is:' . Utils::my_var_dump($matches));
+					foreach ($matches[sizeof($matches) - 1] as $val) {
 						if (strlen(trim($val)) > 0){
-							$results [] = trim($val);
+							if ($contentType) {
+							//	error_Log('content type=' . $contentType);	
+								$results[] = [
+									"type"  =>  $contentType,
+									"data"  =>  trim($val),
+									"start" =>  $offset++,
+									"end"   =>  $offset++
+								];
+							}else {
+								$results [] = trim($val);
+							}
 						}
 					}
 				} 
