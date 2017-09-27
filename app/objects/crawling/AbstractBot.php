@@ -352,6 +352,11 @@ abstract class AbstractBot {
      * @return Crawler A new crawler with replacements done
      */
     protected function makeInitialReplacements($crawler, $findAndReplaces = null, $applyGeneralReplacements = false) {
+
+		if (!$findAndReplaces && !$applyGeneralReplacements){
+			return $crawler;
+		}
+
         $html = $crawler->html();
 
         // First, apply general replacements
