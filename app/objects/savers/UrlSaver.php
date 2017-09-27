@@ -210,13 +210,26 @@ class UrlSaver extends AbstractSaver {
 		//jchen put all cat url to array 
         Factory::databaseService()->addUrl($siteIdToCheck, $categoryCurrentPageUrl, null , -1, true); 
 
-        // If the next page URL is the same as the current page, then set next page url to false. By this way, the next
-        // request will be for another category.
-        $nextPageUrl = $data->getNextPageUrl() ? $data->getNextPageUrl() : false;
+		$nextPageUrl = $this->extractMicroUrl($categoryUrlToCheck, $categoryCurrentPageUrl);
+		if ($nextPageUrl === false) {
+			error_log('no next page any more -----------');
+		}else {
+			if (strlen($nextPageUrl) > 0 ) {
+				error_log('next page url=' . $nextPageUrl);
+			}else {
+				$nextPageUrl = false;
+			}
+		}
+
+		//if next page url == categoryUrl, then this is not a micro, get normal next page url
+		if ($nextPageUrl == $categoryUrlToCheck) {
+        	// If the next page URL is the same as the current page, then set next page url to false. By this way, the next
+        	// request will be for another category.
+        	$nextPageUrl = $data->getNextPageUrl() ? $data->getNextPageUrl() : false;
+		}
 
         if($nextPageUrl && $nextPageUrl == $categoryCurrentPageUrl) $nextPageUrl = false;
-		$nextPageUrl = $this->extractMicroUrl($categoryUrlToCheck, $categoryCurrentPageUrl);
-		error_log('first time category next page url=' . $nextPageUrl);
+	
 		// jchen if next page url has been handled
 		if($nextPageUrl && (Factory::databaseService()->getUrlBySiteIdAndUrl($siteIdToCheck, $nextPageUrl) != null)) $nextPageUrl = false;
 
@@ -284,6 +297,7 @@ class UrlSaver extends AbstractSaver {
 		       			return $base . ($i+1);
 					}else {
 						//reach the end of micro
+						error_log('reach the end of micro');
 						return false;
 					}
 		        }
