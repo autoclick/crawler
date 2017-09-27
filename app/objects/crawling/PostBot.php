@@ -77,7 +77,7 @@ class PostBot extends AbstractBot {
 
         // Make initial replacements.
 		// jchen might cause charset issue
-//        $this->crawler = $this->makeInitialReplacements($this->crawler, $findAndReplacesForFirstLoad, true);
+       	$this->crawler = $this->makeInitialReplacements($this->crawler, $findAndReplacesForFirstLoad, true);
 
         // Apply HTML manipulations
         $this->applyFindAndReplaceInElementAttributes($this->crawler, '_post_find_replace_element_attributes');
@@ -690,12 +690,10 @@ class PostBot extends AbstractBot {
 
             // Find and save the source URLs
             $sourceData = [];
-			$thumbnailUrl = '';
             /* THUMBNAIL URL */
             // Save the thumbnail URL first, because the thumbnail may be removed by gallery image selectors later.
             if($postSaveThumbnailIfNotExist && $thumbnailUrl = $this->extractData($this->crawler, $postThumbnailSelectors, "src", false, true, true)) {
                 $thumbnailUrl = $this->findAndReplace($findAndReplacesForThumbnailUrl, $thumbnailUrl);
-
                 $this->postData->setThumbnailUrl(Utils::prepareUrl($this->getSiteUrl(), $thumbnailUrl, $this->postUrl));
             }
 
@@ -718,10 +716,6 @@ class PostBot extends AbstractBot {
                             // Make the replacements for the image URL
                             if($src) $src = $this->findAndReplace($findAndReplacesForImageUrls, $src);
 							
-							if ($src == $thumbnailUrl) {
-								continue;
-							}
-
                             $nImageData = [];
                             $nImageData["src"] = $src;
                             $nImageData["original"] = $original;
@@ -777,6 +771,7 @@ class PostBot extends AbstractBot {
                 $regexReplaceBase   = 'src=$1%s$3';
                 $fileData = [];
                 $holder = [];
+
                 foreach($sourceData as $key => $source) {
                     if(is_array($source) && !isset($source["src"])) continue;
 
@@ -803,7 +798,12 @@ class PostBot extends AbstractBot {
 
                         $source["path"] = $file['file'];
                         $source["url"] = $file["url"];
-                        $fileData[] = $source;
+						
+
+						//jchen lease same picture save twice
+						if ($this->postData->getThumbnailUrl() != $source["src"]) {
+                        	$fileData[] = $source;
+						}
                     }
                 }
 
