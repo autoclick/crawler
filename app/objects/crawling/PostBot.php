@@ -690,7 +690,7 @@ class PostBot extends AbstractBot {
 
             // Find and save the source URLs
             $sourceData = [];
-
+			$thumbnailUrl = '';
             /* THUMBNAIL URL */
             // Save the thumbnail URL first, because the thumbnail may be removed by gallery image selectors later.
             if($postSaveThumbnailIfNotExist && $thumbnailUrl = $this->extractData($this->crawler, $postThumbnailSelectors, "src", false, true, true)) {
