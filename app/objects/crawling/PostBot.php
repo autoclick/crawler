@@ -193,7 +193,7 @@ class PostBot extends AbstractBot {
 				$sel = $selector["selector"];
                 $isSingle= isset($selector["multiple"]) ? false : true;
 
-                if ($vals = $this->extractData($this->crawler, $selector, $attr, $content_type, $isSingle, true)) {
+                if ($vals = $this->extractData($this->crawler, $sel, $attr, $content_type, $isSingle, true)) {
 					if ($content_type) {
   						$vals = Utils::array_msort($vals, ['start' => SORT_ASC]);
 						$arr = array_merge($arr, $vals);
