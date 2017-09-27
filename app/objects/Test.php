@@ -299,16 +299,16 @@ class Test {
 		if ($attr == 'regex') {
         	$content = $crawler->html();
 			$matches = array();
-			$selector = '/' . $selector . '/' ;
-			try {
-				if (preg_match($selector, $content, $matches)) {
-					$results[] = $matches[1];
-				} else {
-					$results []= 'not find';
-				}
-			} catch(Exception $e) {
-				$results []= $e->getMessage();
+			if (preg_match_all('/' . $selector . '/', $content, $matches)) {
+			  	foreach ($matches[1] as $val) {
+			   		if (strlen(trim($val)) > 0){
+			    		$results [] = trim($val);
+					}
+		  		}
+			}else {
+				$results []= 'not find';
 			}
+
 		} else {
 			$crawler->filter($selector)->each(function($node, $i) use ($testType, $attr, &$results, $crawler, &$abort) {
 				if($abort) return;
