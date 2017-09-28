@@ -721,8 +721,12 @@ abstract class AbstractBot {
 				//error_log('------------ to support regex' . Utils::my_var_dump($selector));
 				$matches = array();
 				if (preg_match_all('/' . $selector . '/', $crawlerHtml, $matches)) {
-				//	error_log('-------------------matches is:' . Utils::my_var_dump($matches));
-					foreach ($matches[sizeof($matches) - 1] as $val) {
+//					error_log('-------------------matches is:' . Utils::my_var_dump($matches));
+					$index = 1;
+					if(sizeof($matches) == 1) {
+						$index = 0;
+					}
+					foreach ($matches[$index] as $val) {
 						if (strlen(trim($val)) > 0){
 							if ($contentType) {
 							//	error_Log('content type=' . $contentType);	
