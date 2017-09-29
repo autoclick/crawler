@@ -57,6 +57,7 @@ class PostService {
         '_category_notify_empty_value_selectors',   // array    CSS selectors to be used to notify the user via email when one of the selector's value is empty/not found
 
         '_test_url_post',                           // string   Holds a test URL for the user to conduct tests on post pages
+        '_translate_option',                           // string   Holds a test URL for the user to conduct tests on post pages
         '_post_title_selectors',                    // array    Selector for post title
         '_post_excerpt_selectors',                  // array    Selectors for the post summary
         '_post_content_selectors',                  // array    Selectors for the post content
@@ -174,6 +175,7 @@ class PostService {
         '_category_post_is_link_before_thumbnail',
         '_test_url_category',
         '_test_url_post',
+        '_translate_option',
         '_test_find_replace_date',
         '_post_date_add_minutes',
         '_post_paginate',

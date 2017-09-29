@@ -16,6 +16,19 @@
         <td>@include('form-items/text', ['name' => '_test_url_post', 'type' => 'url'])</td>
     </tr>
 
+    {{-- TEST POST URL --}}
+    <tr>
+        <td>
+            @include('form-items/label', [
+                'for'   =>  '_translate_option',
+                'title' =>  _wpcc('translate_option'),
+                'info'  =>  _wpcc('empty for no, zh_CN-zh_TW, zh_TW-zhCN')
+            ])
+        </td>
+        <td>@include('form-items/text', ['name' => '_translate_option'])</td>
+    </tr>
+
+
     {{-- POST TITLE SELECTOR --}}
     <tr>
         <td>
