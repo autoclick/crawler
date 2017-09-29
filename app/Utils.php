@@ -217,6 +217,18 @@ class Utils {
         return $node->getNode(0)->ownerDocument->saveHTML($node->getNode(0));
     }
 
+	public static function translate($option, $str) {
+		require_once('chinese_code.php');
+		if($option == 'zh_CN-zh_TW') {
+			return chinese_trad($str);	
+		}else if ($option == 'zh_TW-zh_CN') {
+			return chinese_simp($str);
+		}else {
+			return $str;
+		}
+	}
+
+
     /**
      * Combines 2 or more arrays into one.
      *
@@ -591,4 +603,5 @@ class Utils {
     public static function convertEncoding($string, $targetEncoding = 'UTF-8') {
         return mb_convert_encoding($string, $targetEncoding, mb_detect_encoding($string, 'UTF-8, ISO-8859-1', true));
     }
+
 }

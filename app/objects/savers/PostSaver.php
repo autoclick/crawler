@@ -607,6 +607,9 @@ class PostSaver extends AbstractSaver {
          *
          */
 
+		//jchen, translate if necessary
+		$postData = $this->translate($postData);
+		
         $postId = wp_insert_post($postData);
 
         if($draftPostId && $postId != $draftPostId) {
@@ -817,6 +820,13 @@ class PostSaver extends AbstractSaver {
         return $postId;
     }
 
+	function translate($source) {
+		$translate_option = $this->getSetting('_translate_option');
+		$source['post_title'] = Utils::translate($translate_option, $source['post_title']);
+		$source['post_excerpt'] = Utils::translate($translate_option, $source['post_excerpt']);
+		$source['post_content'] = Utils::translate($translate_option, $source['post_content']);
+		return $source;
+	}
     /*
      *
      */
