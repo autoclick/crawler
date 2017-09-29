@@ -737,7 +737,7 @@ abstract class AbstractBot {
 									"end"   =>  $offset++
 								];
 							}else {
-								$results [] = trim($val);
+								$results [] = html_entity_decode(trim($val));
 							}
 						}
 					}
