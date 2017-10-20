@@ -719,7 +719,7 @@ class PostBot extends AbstractBot {
                             $nImageData = [];
                             $nImageData["src"] = $src;
                             $nImageData["original"] = $original;
-                            $nImageData["do_not_replace"] = true;
+                            $nImageData["do_not_replace"] = false;
                             $nImageData["gallery_image"] = true;
 
                         }
